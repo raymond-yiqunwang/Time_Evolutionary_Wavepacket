@@ -1,0 +1,50 @@
+% !TEX encoding = UTF-8 Unicode
+% XeLaTeX can use any Mac OS X font. See the setromanfont command below.
+% Input to XeLaTeX is full Unicode, so Unicode characters can be typed directly into the source.
+
+% The next line tells TeX to typeset with xelatex, and to open and save the source with Unicode encoding.
+
+% !TEX TS-program = xelatex
+
+\documentclass[a4paper,twocolumn,12pt]{article}
+
+\input{settings}
+
+\begin{document}
+
+\begin{titlepage}
+  \includepdf{Book-Cover.pdf}
+\end{titlepage}
+
+\title{\textbf{\heiti{波函数含时演化方法与性质研究}}}
+\author{\xiaosi{王逸群，李晔飞$^{\dagger}$}}
+\date{}
+
+\twocolumn[
+\begin{@twocolumnfalse}
+  \maketitle
+
+  \begin{abstract}
+    \input{abstract}\\
+  \end{abstract}
+\end{@twocolumnfalse}]
+
+\section{引言}
+\label{sec:intro}
+\input{intro}
+
+
+\section{实验部分}
+\label{sec:methods}
+\input{methods}
+
+\section{结果与讨论}
+\label{sec:analysis}
+\input{analysis}
+
+\section{结论与展望}
+\label{conclusion}
+\input{conclusion}
+%\end{CJK}
+
+\end{document}

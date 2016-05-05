@@ -1,0 +1,226 @@
+% !TEX root = Time_Evo.tex
+
+\subsection{相空间和希尔伯特空间}
+相空间和希尔伯特空间的概念对理解量子体系至关重要。相空间(Phase Space)是一个表示系统所有可能状态的空间，它的每一个维度代表着体系的一个自由度。因此系统每个可能的状态在相空间中都对应着一个点。我们对物理现象的理解依赖于其连续性: 物理定律可以由连续函数描述。而量子计算模型建立于连续函数可被离散的采样点完全表示的基础上。在量子力学中，相空间里最小的体积单元是$ h^{D} $(h是普朗克常数，D是体系的自由度)。这说明至少在每个体积单元中有一个采样点就可能离散地表示这个系统。相空间内的离散表示与波函数在希尔伯特空间里的表示密切相关。
+
+希尔伯特空间(Hilbert Space)是带有内积的完备向量空间。量子力学的非定域性质使得我们必须找到一种离域的表示方法。在量子表示中使用的算符理论需要一个作用空间，例如含时演化算符和哈密顿算符都是作用在希尔伯特空间上的线性算符。希尔伯特空间允许定义非定域算符，因此为我们解决了这样的问题。希尔伯特空间的结构决定了相空间里的表示，下一节将具体描述希尔伯特空间里的表示方法。
+
+\subsection{希尔伯特空间中的表示方法}
+首先考虑这样一个问题，用一系列基函数来拟合任意一个波函数(一维空间):
+\begin{equation}
+  \Psi (x) \approx \sum_{i=1}^N c_i \phi_i (x)
+\end{equation}
+其中$\phi_i$构成一个标准正交基组，也就是说:
+\begin{equation}
+  \int_{-\infty}^{+\infty} \phi_i(x) \phi_j(x) dx = \delta_{ij}
+\end{equation}
+其中$\delta_{ij}$是Kronecker Delta符号。那么有:
+\begin{equation}
+  c_i = \int_{-\infty}^{+\infty} \Psi(x) \phi_j(x) dx
+\end{equation}
+然而需要注意，在数学上简单成立的公式并不一定可以方便地由计算机实现。在数值计算时我们总希望使用离散的表示方法: 首先需要满足在K个格点上逼近函数准确值，
+\begin{equation}
+  \Psi(x_k) = \sum_{i=1}^{N} c_i \phi_i(x_k) (k=1,2,...,K)
+\end{equation}
+离散采样的基组满足正交归一性:
+\begin{equation}
+  \sum_{k=1}^{K} \phi_i(x_k) \phi_j(x_k) = \delta_{ij}
+\end{equation}
+同样由正交性可得:
+\begin{equation}
+  c_i = \sum_{k=1}^{K} \Psi(x_k) \phi_i(x_k)
+\end{equation}
+
+\subsection{基函数的选择}
+本课题选取的基函数是$sinc$函数，即:
+\begin{equation}
+  \phi_i(x) = \frac{sin[\pi(x-x_i)]}{\pi (x-x_i)}
+\end{equation}
+并且理想上认为$\phi_i(x)$当且仅当$x=x_i$时表达式值为1，其他情况为0。显然sinc函数满足正交归一的性质；从后面的推导我们将看出，在这里$\phi_i(x)$的具体表达式并不重要，不会影响后续的表示。
+
+然而性质更好的基函数可以由傅里叶方法得到。傅里叶方法得意重用是由于它表明在单位体积相空间内取一个采样点是可实现的，并且快速傅里叶变换算法(FFT)在数值计算上有很大优势，其算法复杂度随着相空间的体积半线性增长。傅里叶方法中，基函数表达式为：
+\begin{equation}
+  \small{\phi_k(x) = e^{i 2 \pi k x / L}, k = -(N/2-1),...,N/2}
+\end{equation}
+其中采样点为等距节点: $x_j = (j-1) \Delta x$，N为采样点数，L是采样长度。波函数可以近似表示为:
+\begin{equation}
+  \Psi(x) \approx \sum_{k=-(N/2-1)}^{N/2} c_k e^{i 2 \pi k x / L}
+\end{equation}
+由傅里叶级数的正交性可得系数项:
+\begin{equation}
+  c_k = \frac{1}{N} \sum_{j=1}^{N} \Psi(x_j) e^{-i 2\pi k x_j /L}
+\end{equation}
+其系数项表示了波函数在动量空间里的振幅，有重要物理意义。
+
+\subsection{哈密顿算符的表示}
+离散希尔伯特空间的构建让我们能够表示定域和非定域的算符。量子力学中最重要的算符是哈密顿算符(Hamiltonian Operator)，在我们表示哈密顿算符之前，先推导狄拉克表示下的算符性质。
+令$\phi_i (i=1,2,…,n)$ 构成一组标准正交基，即:
+\begin{equation}
+  \left< \phi_i | \phi_j \right> = \delta_{ij}
+\end{equation}
+\begin{equation}
+  \Sigma_j \left| \phi_j \left> \right< \phi_j \right| = I
+\end{equation}
+其中$I$为恒等算符。
+\begin{IEEEeqnarray}{rCl}
+  \hat{O} \left| \phi_i \right> & = & \Sigma_j \left| \phi_j \left> \right< \phi_j \right|\hat{O} \left| \phi_i \right>  \nonumber\\
+  & = & \Sigma_j O_{ji}\left| \phi_j \right>
+\end{IEEEeqnarray}
+
+其中$O_{ij} = \left< \phi_i \left| \hat{O} \right| \phi_j \right>$，这样便将非定域的算符在希尔伯特空间的基组表示下构造出来，在计算机中进行矩阵的运算。下面将进一步描述构造的原理:
+考虑将波函数由一系列基函数展开，$\left< \Psi \right> = \Sigma_i c_i \left| \phi_i \right>$，在基函数形式确定后，实际上只需要得到其系数矩阵C就可以表示波函数。因此往后我们使用矩阵C代表波函数的系数矩阵。展开式可以表示为:
+\begin{equation}
+  \left| \Psi \right> = \Sigma_i C_i \left| \phi_i \right>
+\end{equation}
+将算符$\hat{O}$作用于波函数:
+\begin{IEEEeqnarray}{rCl}
+  \hat{O} \left| \Psi \right> & = & \Sigma_i \hat{O} C_i \left| \phi_i \right> \nonumber\\
+  & = & \Sigma_i \Sigma_j O_{ji} C_i \left| \phi_j \right> \nonumber\\
+  & = & \Sigma_j \left( \Sigma_i O_{ji} C_i \right) \left| \phi_j \right> \nonumber\\
+  & = & \Sigma_j {\left( OC \right)}_j \left| \phi_j \right>  
+\end{IEEEeqnarray}
+\indent 将（15）和（16）对比发现$\hat{O}$算符作用后相当于将我们构建的$O$矩阵左乘原系数矩阵。那么接下来我们就要找到哈密顿算符$\hat{H}$在我们选取的基组下的矩阵表示。\par
+在简谐振子模型中哈密顿算符可以被分解为动能项和势能项两部分，分别记为$\hat{T}$和$\hat{V}$。在原子单位(a.u.)下可以表示为：
+\begin{equation}
+  \hat{H} = \hat{T} + \hat{V}
+\end{equation}
+\begin{equation}
+  \hat{T}(p) = \frac{\hat{p}^2}{2\mu}
+\end{equation}
+\begin{equation}
+  \hat{V}(x) = \frac{1}{2} k \hat{x}^2
+\end{equation}
+$\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}$ ; $\mu$为体系的约化质量;$k$为体系的力常数。考虑动能项矩阵的元素：
+\begin{IEEEeqnarray}{rCl}
+  T_{ij} & = & \left< \phi_i \right| \hat{T} \left| \phi_j \right> \nonumber\\
+  & = & \left< \phi_i \right| -\frac{1}{2\mu}\frac{\partial^2}{\partial x^2}\left| \phi_j \right> \nonumber\\
+  & = & -\frac{1}{2\mu}\int_{-\infty}^{\infty} {\phi_i}^{*}\frac{\partial^2 \phi_j}{\partial x^2} dx \nonumber
+\end{IEEEeqnarray}
+动能项含有二阶导数计算，对此我们采用三点近似法(three-point-approximation)处理：
+\begin{equation*}
+  \frac{\partial^2 \phi_j}{\partial x^2} = \frac{\phi_j(x+\Delta x) + \phi_j(x-\Delta x) - 2\phi_j(x)}{{\Delta x}^2}
+\end{equation*}
+根据$sinc$函数的正交性质易知：
+\begin{align}
+  T_{ij} & = 
+  \begin{cases}
+    \frac{1}{\mu {\Delta x}^2} & i=j\\
+    -\frac{1}{2\mu {\Delta x}^2} & \left| i-j \right| =1 \\
+    0 & \small{\text{其他情况}}
+  \end{cases}
+\end{align}
+同时对势能项采用定域近似，即：
+\begin{IEEEeqnarray}{rCl}
+  V_{ij} & = & \left< \phi_i \right| \hat{V} \left| \phi_j \right> \nonumber\\
+  & = & \left< \phi_i \right| \frac{1}{2}k x^2 \left| \phi_j \right> \nonumber \\
+  & \approx & V(x_i) \cdot \delta_{ij} 
+\end{IEEEeqnarray} \par
+我们采用等距结点法，在$(-2,2)$区间上采100个样，并根据上述表达式构造出哈密顿算符的矩阵，显然这是一个$100*100$的方阵。经过对角化将得到的结果和理论预测相比较，见表\ref{tab:Hamiltonian}
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{P{1cm}|P{1.7cm}|P{1.7cm}|P{2cm}}
+    \hline
+     $\nu$ & 理论值 & 计算值 & 相对误差 \\ \hline
+     1 & 0 & 0 & 0                   \\ \hline
+     2 & 0 & 0 & 0                   \\ \hline
+     3 & 0 & 0 & 0                   \\ \hline
+  \end{tabular}
+\captionof{table}{\textbf{哈密顿算符计算结果比较}}
+\label{tab:Hamiltonian}
+\end{table} \par 
+可见所构建的哈密顿算符的表示矩阵精度可以接受，接下来将在含时演化算符中使用哈密顿算符。
+ 
+\subsection{含时演化}
+\subsubsection{量子退相干和波函数坍缩}
+在量子力学中，波函数的坍缩(wave function collapse)是指波函数从一个态叠加状态衰变到某个本征态的过程。量子退相干效应解释了这一现象：当体系与环境相互作用时会与外界相互耦合，发生量子纠缠，即体系和环境持续交换信息。因此量子退相干效应可以理解为体系的内部信息向外界环境“泄露”，这是一个不可逆的过程。我们用狄拉克表示简单诠释这一过程。体系的初始状态表示为：
+\begin{equation}
+  \left| \Phi \right> = \sum_i \left| i \right> \left< i | \Phi \right>
+\end{equation}
+这里$\left| i \right>$是系统介入选择的本征基组(environmentally induced selected eigen basis)。环境的初始状态设为$\left| \epsilon \right>$，那么体系与环境共同组成的状态可表示为：
+\begin{equation}
+  \left| \Psi \right> = \sum_i \left| i \right> \otimes \left| \epsilon \right> \left< i|\Phi \right>
+\end{equation}
+其中$\otimes$是张量积的符号。体系与环境的相互作用可分两种极限情况考虑：
+\begin{itemize}
+  \item 体系完全丧失初始特征并融入环境,在这种情况下$\sum_i \left| i \right> \otimes \left| \epsilon \right>$演化为$\left| \epsilon_i \right>$;
+  \item 体系持续影响着环境，其本身却不受扰动，即$\sum_i \left| i \right> \otimes \left| \epsilon \right>$演化为$\left| i,\epsilon_i \right>$。
+\end{itemize}\par 
+在这里我们仅仅简单介绍波函数坍缩的现象，便于引出下一节对含时演化算符的推导。
+
+\subsubsection{含时演化算符}
+之前我们解决了波函数和哈密顿量在希尔伯特空间中的表示问题后，并介绍了波函数坍缩现象，接下来对波函数进行含时演化。根据含时薛定谔方程(公式\ref{eq:td-Schrodinger})和$\Psi(t) = \hat{U}\Psi(0)$，这个偏微分方程的解满足形式：
+\begin{equation}
+  \hat{U}(t) = e^{(-i / \hbar) \hat{H}t}
+  \label{eq:time-evo-operator}
+\end{equation}
+如果哈密顿量与时间相关，那么我们将得到这样的形式：
+\begin{IEEEeqnarray}{rCl}
+  \Psi(t) & = & \hat{U}(t)\Psi(0) \nonumber \\
+  & = & \hat{T} \  exp\left[ -\frac{i}{\hbar}\int_0^t \hat{H}dt' \right] \Psi(0)
+\end{IEEEeqnarray}
+其中$\hat{T}$是时间序列算符，它确保演化算符按照时间排序后作用于波函数上。处理这样的演化公式主要有两个难点：
+\begin{itemize}
+  \item 哈密顿算符的指数函数展开
+  \item 时间序列算符的构建
+\end{itemize}
+简易起见我们避开处理含时哈密顿量，这样主要处理的对象即公式\ref{eq:time-evo-operator}。下面重点描述含时演化算符的展开方法。
+
+\subsubsection{对角化方法}
+矩阵指数函数的泰勒展开表达式为:
+\begin{equation}
+  e^X = \sum_{k=0}^{\infty}\frac{1}{k!}X^k
+  \label{eq:Taylor-Expo}
+\end{equation}
+并且定义$X^0$等于相同维度的单位矩阵$I$。显然在计算机数值求解中难以实现这一无穷序列的计算，况且阶乘项$k!$在$k>20$时就会溢出长整形数据(8字节)的存储范围，因此必须采用其他方法处理含时演化算符。\par 
+由于哈密顿算符对应矩阵为厄米矩阵，厄米矩阵酉相似于等阶对角阵，因此一定可以找到一个酉矩阵V，满足：
+\begin{equation}
+  H = V \Lambda V^{-1}
+\end{equation}
+其中$\Lambda$为对角矩阵。同时我们还知道，$V$是一个满秩矩阵，其列向量构成$H$的一组线性无关的特征向量；$\Lambda$中的对角元素即为$H$的特征值。一般性地，对于可对角化矩阵A，其指数函数为：
+\begin{IEEEeqnarray}{rCl}
+  e^A & = & \sum_{n=0}^{\infty} c_n A^n \nonumber \\
+  & = & c_n (V \Lambda V^{-1})^n \nonumber
+\end{IEEEeqnarray}
+由于$A^2 = (V\Lambda V^{-1})(V\Lambda V^{-1}) = V {\Lambda}^2 V^{-1}$,可以得到：
+\begin{IEEEeqnarray}{rCl}
+  e^A & = & c_n V \Lambda^n V^{-1}  \nonumber \\
+  & = & V e^{\Lambda} V^{-1} 
+\end{IEEEeqnarray}
+而对于对角矩阵$\Lambda$,其指数函数相当于指数单独作用于每个对角元素。所以只要我们将哈密顿矩阵对角化，得到特征向量和特征值，便可以通过矩阵计算得到$e^{(-i/\hbar)\hat{H}dt}$。\par 
+然而对角化方法在处理含时演化算符中并不常用，主要是由于需要求逆矩阵，对于条件数差的情况很容易表现出数值不稳定性，而且大矩阵对角化耗费计算机时间。多项式展开方法在处理含时演化算符时表现出优良的性质，例如切比雪夫展开方法。在章节\ref{sec:analysis}中我们会比较二者的数值表现。
+
+\subsubsection{切比雪夫多项式展开方法}
+对角化处理方法似乎是一种高效的工具，然而由于涉及逆矩阵的计算，可能会产生数值不稳定性。在使用计算机处理物理问题时，数值方法的实现过程时常并不如理论推导得那样美观，理论上简单优美的结论在用数值方法实现时可能产生很大的偏差。例如当我们的对角化过程中的酉矩阵含有很接近于零的值时，涉及倒数运算时可能会导致数据溢出，产生离奇的结果；如果错误结果并不明显，还可能被忽略，导致后面更严重的误差。\par 
+Tal-Ezer和Kosloff等人提出了用切比雪夫多项式展开含时演化算符的方法，为我们提供了有力的数学工具。首先考虑一个定义在$[-1,1]$区间上的标量函数(scalar function)$F(x)$，我们知道切比雪夫多项式逼近是其函数逼近的最优选择，因为其最大误差限和其他多项式展开方法相比是最小的。类似地，展开含时演化算符时我们需要将变量因子投影到[ -i , i ]区间上。\par 
+我们引入复切比雪夫多项式$\Phi_n(\hat{X})$，其定义为：
+\begin{equation}
+  \Phi_n(\hat{X}) = 2\hat{X}\Phi_{n-1}(\hat{X}) + \Phi_{n-2}(\hat{X})
+\end{equation}
+其中$\Phi_0(\hat{X}) = 1$，$\Phi_1(\hat{X}) = \hat{X}$。然后我们将哈密顿量投影到$[-1,1]$上：
+\begin{equation}
+\begin{split}
+  &H_{\text{half}}  =  \frac{1}{2}(H_{\text{max}} + H_{\text{min}}) \nonumber \\ 
+  &\Delta H  =  \frac{1}{2} (H_{\text{max}} - H_{\text{min}}) \nonumber \\
+  &H_{\text{norm}}  =  \frac{(H - H_{\text{half}})} {\Delta H}
+\end{split}
+\end{equation}
+$H_{\text{max}}$和$H_{\text{min}}$分别为$H$的最大和最小本征值。这样$H_{norm}$中的每个元素都在实切比雪夫展开的定义域内。将$\hat{H_{\text{norm}}}$代换演化算符中的$\hat{H}$可以得到：
+\begin{equation}
+  \Psi(t) \approx e^{\beta} \sum_{n=0}^{N} a_n[\frac{\Delta E t}{2 \hbar}] \Phi_n[-i H_{\text{norm}}] \Psi(0)
+\end{equation}
+其中$\beta = (- i / \hbar) t H_{\text{half}}$是由投影引入的相位移动项，$a_n$是复切比雪夫展开项系数，可以由贝塞尔函数得到：
+\begin{IEEEeqnarray}{rCl}
+  a_n(\alpha) & = & \int_{-i}^{i}\frac{e^{i\alpha x}\phi_n(x)}{(1-x^2)^{1/2}}dx \nonumber \\
+  & = & 2 J_n(\alpha)
+\end{IEEEeqnarray}
+$J_n(\alpha)$是第一类贝塞尔函数，并且有$a_0(\alpha) = J_0(\alpha)$，$\alpha = \Delta H t / \hbar$。 \par 
+显然，$H_{\text{norm}}$的值域为$[-1,1]$，那么$-iH_{\text{norm}}$的值域为$[-i,i]$，因此适用于复切比雪夫展开。
+
+
+
+
+
+
+
+
+
