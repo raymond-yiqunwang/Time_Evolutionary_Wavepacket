@@ -23,8 +23,9 @@
 \end{equation*}
 这样V便成为完备的度量空间。希尔伯特空间的内积和欧几里得空间中的点积形式非常相似，但其为连续积分的形式，因此希尔伯特空间是对欧几里得空间的一种拓展概念。希尔伯特空间将二维欧几里得平面和三维空间延拓到有穷或无穷维度的完备空间，并且适用微积分定理。量子力学的非定域性质使得我们必须找到一种离域的表示方法，在量子表示中使用的算符理论需要一个作用空间，例如含时演化算符和哈密顿算符都是作用在希尔伯特空间上的线性算符。希尔伯特空间允许定义非定域算符，因此为我们解决了这样的问题。希尔伯特空间的结构决定了相空间里的表示，下一节将具体描述希尔伯特空间里的表示方法。
 
+
 \subsection{希尔伯特空间中的表示方法}
-首先考虑这样一个问题，用一系列基函数来拟合任意一个波函数(一维空间):
+首先考虑这样一个问题，用有限个基函数来拟合任意一个波函数(一维空间):
 \begin{equation}
   \Psi (x) \approx \sum_{i=1}^N c_i \phi_i (x)
 \end{equation}
@@ -32,22 +33,29 @@
 \begin{equation}
   \int_{-\infty}^{+\infty} \phi_i(x) \phi_j(x) dx = \delta_{ij}
 \end{equation}
-其中$\delta_{ij}$是Kronecker Delta符号。那么有:
+$\delta_{ij}$是Kronecker Delta符号。那么接下来问题变为如何求解展开项系数$c_i$。由基函数的正交性可以得到：
+\begin{IEEEeqnarray}{rCl}
+    \Psi (x) & = & \sum_{i=1}^N c_i \phi_i (x) \nonumber \\
+    \Psi (x) \phi_j(x) & = & \sum_{i=1}^N c_i \phi_i(x) \phi_j(x) \nonumber \\
+    \sum_{i=1}^{N}c_i \delta_{ij} & = & \int_{-\infty}^{+\infty} \Psi(x) \phi_j(x) dx \nonumber \\
+    c_i & = & \int_{-\infty}^{+\infty} \Psi(x) \phi_i(x) dx
+\end{IEEEeqnarray}
+在狄拉克表示中，$c_i$可以表示为$\left< \phi_i | \Psi \right>$，也就是将$\Psi$投影到基函数$\phi_i$上。然而需要注意，在数学上简单成立的公式并不一定可以方便地由计算机实现。在数值计算时我们总希望使用离散的表示方法。为了实现离散化计算，我们将使N个采样点的展开项值等于解析解的值:
 \begin{equation}
-  c_i = \int_{-\infty}^{+\infty} \Psi(x) \phi_j(x) dx
+  \Psi (x_k) = \sum_{i=1}^N c_i \phi_i (x_k)
 \end{equation}
-然而需要注意，在数学上简单成立的公式并不一定可以方便地由计算机实现。在数值计算时我们总希望使用离散的表示方法: 首先需要满足在K个格点上逼近函数准确值，
-\begin{equation}
-  \Psi(x_k) = \sum_{i=1}^{N} c_i \phi_i(x_k) (k=1,2,...,K)
-\end{equation}
-离散采样的基组满足正交归一性:
+$x_k$为采样格点。离散采样的基组满足正交归一性:
 \begin{equation}
   \sum_{k=1}^{K} \phi_i(x_k) \phi_j(x_k) = \delta_{ij}
 \end{equation}
 同样由正交性可得:
-\begin{equation}
-  c_i = \sum_{k=1}^{K} \Psi(x_k) \phi_i(x_k)
-\end{equation}
+\begin{IEEEeqnarray}{rCl}
+    \Psi (x_k) & = & \sum_{i=1}^N c_i \phi_i (x_k) \nonumber \\
+    \Psi (x_k) \phi_j(x_k) & = & \sum_{i=1}^N c_i \phi_i(x_k) \phi_j(x_k) \nonumber \\
+    \sum_{i=1}^{N}c_i \delta_{ij} & = & \sum_{k=1}^K \Psi(x_k) \phi_j(x_k)  \nonumber \\
+    c_i & = & \sum_{k=1}^{K} \Psi(x_k) \phi_i(x_k)
+\end{IEEEeqnarray}
+
 
 \subsection{基函数的选择}\label{sec:basis}
 本课题选取的基函数是$sinc$函数，即:
@@ -242,3 +250,4 @@ $J_n(\alpha)$是第一类贝塞尔函数，并且有$a_0(\alpha) = J_0(\alpha)$�
 
 
 
+m                   
