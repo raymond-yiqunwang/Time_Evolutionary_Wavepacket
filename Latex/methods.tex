@@ -55,14 +55,23 @@ $x_k$为采样格点。离散采样的基组满足正交归一性:
     \sum_{i=1}^{N}c_i \delta_{ij} & = & \sum_{k=1}^K \Psi(x_k) \phi_j(x_k)  \nonumber \\
     c_i & = & \sum_{k=1}^{K} \Psi(x_k) \phi_i(x_k)
 \end{IEEEeqnarray}
+从后面的推导我们将会看到，这一组基函数的系数将构成一个矢量，希尔伯特空间内的算符操作矩阵将作用在波函数的系数矢量上。因此今后这组系数矢量将作为波函数的具体形式出现和使用。
 
 
 \subsection{基函数的选择}\label{sec:basis}
-本课题选取的基函数是$sinc$函数，即:
+如上所述，我们需要找到一组合适的基函数$\phi_i$来展开所研究体系的波函数。基函数需要拥有的性质包括正交归一性并满足一定的边界条件。当然了，非正交归一的基函数也可以工作，不过在后续处理时会引入重叠积分项。本课题选取的基函数是$sinc$函数，即:
 \begin{equation}
   \phi_i(x) = \frac{sin[\pi(x-x_i)]}{\pi (x-x_i)}
 \end{equation}
-并且理想上认为$\phi_i(x)$当且仅当$x=x_i$时表达式值为1，其他情况为0。显然sinc函数满足正交归一的性质；从后面的推导我们将看出，在这里$\phi_i(x)$的具体表达式并不重要，不会影响后续的表示。
+\begin{figure}[hbt]
+  \center
+  \vspace{-1mm}
+  \includegraphics[width=0.95\linewidth]{Sinc}
+  \caption{Sinc函数}
+  \label{fig:Sinc}
+\end{figure}
+并且理想上认为$\phi_i(x)$当且仅当$x=x_i$时表达式值为1，其他情况为0。显然sinc函数满足正交归一的性质
+从后面的推导我们将看出，在这里$\phi_i(x)$的具体表达式并不重要，不会影响后续的表示。
 
 然而性质更好的基函数可以由傅里叶方法得到。傅里叶方法得意重用是由于它表明在单位体积相空间内取一个采样点是可实现的，并且快速傅里叶变换算法(FFT)在数值计算上有很大优势，其算法复杂度随着相空间的体积半线性增长。傅里叶方法中，基函数表达式为：
 \begin{equation}
@@ -79,7 +88,7 @@ $x_k$为采样格点。离散采样的基组满足正交归一性:
 其系数项表示了波函数在动量空间里的振幅，有重要物理意义。
 
 \subsection{哈密顿算符的表示}
-离散希尔伯特空间的构建让我们能够表示定域和非定域的算符。量子力学中最重要的算符是哈密顿算符(Hamiltonian Operator)，在我们表示哈密顿算符之前，先推导狄拉克表示下的算符性质。
+离散希尔伯特空间的构建让我们能够表示定域和非定域的算符。量子力学中最重要的算符是哈密顿算符(Hamiltonian Operator)，在我们表示哈密顿算符之前，先推导狄拉克表示下的算符性质。需要注意，任意波函数都由是一组由无穷多体系本征态的线性组合构成的，因此波函数的完全展开应该含有无穷多项。然而我们只能在计算机能力允许的条件下用有限个基函数拟合波函数。
 令$\phi_i (i=1,2,…,n)$ 构成一组标准正交基，即:
 \begin{equation}
   \left< \phi_i | \phi_j \right> = \delta_{ij}
@@ -89,7 +98,8 @@ $x_k$为采样格点。离散采样的基组满足正交归一性:
 \end{equation}
 其中$I$为恒等算符。
 \begin{IEEEeqnarray}{rCl}
-  \hat{O} \left| \phi_i \right> & = & \Sigma_j \left| \phi_j \left> \right< \phi_j \right|\hat{O} \left| \phi_i \right>  \nonumber\\
+  \hat{O} \left| \phi_i \right> & = & I \hat{O}\left| \phi_i \right> \nonumber \\
+  & = & \Sigma_j \left| \phi_j \left> \right< \phi_j \right|\hat{O} \left| \phi_i \right>  \nonumber\\
   & = & \Sigma_j O_{ji}\left| \phi_j \right>
 \end{IEEEeqnarray}
 
@@ -135,7 +145,7 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
     0 & \small{\text{其他情况}}
   \end{cases}
 \end{align}
-同时对势能项采用定域近似，即：
+同时对势能项采用定域近似，即体系的势能仅由所测量该位置的势能决定：
 \begin{IEEEeqnarray}{rCl}
   V_{ij} & = & \left< \phi_i \right| \hat{V} \left| \phi_j \right> \nonumber\\
   & = & \left< \phi_i \right| \frac{1}{2}k x^2 \left| \phi_j \right> \nonumber \\
@@ -144,21 +154,23 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
 我们采用等距结点法，在$(-2,2)$区间上采100个样，并根据上述表达式构造出哈密顿算符的矩阵，显然这是一个$100*100$的方阵。经过对角化将得到的结果和理论预测相比较，见表\ref{tab:Hamiltonian}
 \begin{table}[!ht]
   \centering
-  \begin{tabular}{P{1cm}|P{1.7cm}|P{1.7cm}|P{2cm}}
+  \begin{tabular}{P{1cm}|P{1.7cm}|P{1.7cm}|P{1.8cm}}
     \hline
      $\nu$ & 理论值 & 计算值 & 相对误差 \\ \hline
-     1 & 0 & 0 & 0                   \\ \hline
-     2 & 0 & 0 & 0                   \\ \hline
-     3 & 0 & 0 & 0                   \\ \hline
+     1 & 3.1416 & 3.1396 & 0.06\%                   \\ \hline
+     2 & 9.4248 & 9.4149 & 0.15\%                   \\ \hline
+     3 & 15.7080 & 15.6823 & 0.16\%                   \\ \hline
+     4 & 21.9417 & 21.9911 & 0.23\%                 \\ \hline
+     5 & 28.1932 & 28.2743 & 0.29\%                 \\ \hline
   \end{tabular}
 \captionof{table}{\textbf{哈密顿算符计算结果比较}}
 \label{tab:Hamiltonian}
 \end{table} \par 
-可见所构建的哈密顿算符的表示矩阵精度可以接受，接下来将在含时演化算符中使用哈密顿算符。
+可见所构建的哈密顿算符的表示矩阵精度在较低的振动能级下可以接受。然而我们似乎发现一个不好的趋势，本征值的相对误差随着能级的增加在递增。确实，我们所用的近似方法导致高能级哈密顿本征值计算误差较大，不过这个问题在我们的研究范围内并不会带来灾难性的影响。我们会在后面讨论这个问题。接下来将在含时演化算符中使用哈密顿算符。
  
 \subsection{含时演化}
 \subsubsection{量子退相干和波函数坍缩}
-在量子力学中，波函数的坍缩(wave function collapse)是指波函数从一个态叠加状态衰变到某个本征态的过程。量子退相干效应解释了这一现象：当体系与环境相互作用时会与外界相互耦合，发生量子纠缠，即体系和环境持续交换信息。因此量子退相干效应可以理解为体系的内部信息向外界环境“泄露”，这是一个不可逆的过程。我们用狄拉克表示简单诠释这一过程。体系的初始状态表示为：
+在量子力学中，波函数的坍缩(wave function collapse)是指当进行外部测量时，波函数从一个态叠加状态衰变到某个本征态的过程。量子退相干效应解释了这一现象：当体系与环境相互作用时会与外界相互耦合，发生量子纠缠，即体系和环境持续交换信息。因此量子退相干效应可以理解为体系的内部信息向外界环境“泄露”，这是一个不可逆的过程。我们用狄拉克表示简单诠释这一过程。体系的初始状态表示为：
 \begin{equation}
   \left| \Phi \right> = \sum_i \left| i \right> \left< i | \Phi \right>
 \end{equation}
@@ -189,7 +201,24 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
   \item 哈密顿算符的指数函数展开
   \item 时间序列算符的构建
 \end{itemize}
-简易起见我们避开处理含时哈密顿量，这样主要处理的对象即公式\ref{eq:time-evo-operator}。下面重点描述含时演化算符的展开方法。
+显然，如果哈密顿量显含时间变量，我们将不得不处理这个棘手的时间积分项。不过我们的简谐振子体系中哈密顿量不显含时间，那么我们主要处理的对象即公式\ref{eq:time-evo-operator}。下面重点描述含时演化算符的展开方法。
+
+对于任何一种离散化得表示方法，我们可以通过计算$\Delta E = E_{max} - E_{min}$来估算哈密顿量的本征值的范围。从后面的推导我们会明白这对使用切比雪夫展开很重要。另外$\Delta E$还将限定我们计算中使用的时间步长$dt$，根据能量-时间不确定性原理：
+\begin{IEEEeqnarray*}{rCl}
+  {\sigma_H}^{2}{\sigma_Q}^{2} & \geq & {\left( \frac{1}{2i} \left< [ \hat{H} , \hat{Q} ] \right> \right) }^{2}  \\
+  \sigma_H \sigma_Q & \geq & \frac{\hbar}{2} \left| \frac{d<Q>}{dt} \right| \\
+\end{IEEEeqnarray*}
+定义$\Delta E = \sigma_H$，$\Delta t = \frac{\sigma_Q}{|d\left< Q \right>/dt|}$，得到：
+\begin{equation}
+  \Delta E \Delta t \geq \frac{\hbar}{2}
+\end{equation}
+在得到$\Delta E$之后，我们可以估算出可以使用的时间步长$dt$的下限，如果使用步长小于该$dt$阈值，那么该演化将是不准确的。在我们的参数设置条件下，$dt$取值的下限为$3.86 \times 10^{-4}$，而我们默认参数$dt$为0.01，理论上是可行的。
+
+如果哈密顿量不显含时间，那么时间序列算符$\hat{T}$将可以略去，然后将含时演化的过程分割成很多小步骤，每次进行单步演化，以确保该演化步骤内哈密顿量改变不要太大：
+\begin{equation}
+  \hat{U} = \prod_{n=0}^{N-1}\hat{U}((n+1)\Delta t,n\Delta t)
+\end{equation}
+于是我们每次将一个$\hat{U}$作用在波函数上，如果要得到10$dt$时刻的波函数情况，应当演化10次，而不是将$dt$简单地乘10。接下来介绍两种展开含时演化算符的数值方法。
 
 \subsubsection{对角化方法}
 矩阵指数函数的泰勒展开表达式为:
@@ -202,18 +231,30 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
 \begin{equation}
   H = V \Lambda V^{-1}
 \end{equation}
-其中$\Lambda$为对角矩阵。同时我们还知道，$V$是一个满秩矩阵，其列向量构成$H$的一组线性无关的特征向量；$\Lambda$中的对角元素即为$H$的特征值。一般性地，对于可对角化矩阵A，其指数函数为：
+其中$\Lambda$为对角矩阵。同时我们还知道，$V$是一个满秩矩阵，其列向量构成$H$的一组线性无关的特征向量；$\Lambda$中的对角元素即为$H$的特征值。也就是说，只要我们用数值算法将目标矩阵对角化，并且得到相应的特征向量和特征值，就可以通过如下推导得到该矩阵的指数函数解。一般性地，对于可对角化矩阵A，其指数函数的展开式可以表示为：
 \begin{IEEEeqnarray}{rCl}
   e^A & = & \sum_{n=0}^{\infty} c_n A^n \nonumber \\
-  & = & c_n (V \Lambda V^{-1})^n \nonumber
+  & = & \sum_{n=0}^{\infty}c_n (V \Lambda V^{-1})^n
 \end{IEEEeqnarray}
-由于$A^2 = (V\Lambda V^{-1})(V\Lambda V^{-1}) = V {\Lambda}^2 V^{-1}$,可以得到：
+由于
+\begin{IEEEeqnarray*}{rCl}
+  A^2 & = & (V\Lambda V^{-1})(V\Lambda V^{-1}) \\
+  & = & V\Lambda (V^{-1} V ) \Lambda V^{-1} \\
+  & = & V {\Lambda}^2 V^{-1}\\
+\end{IEEEeqnarray*}
+可以得到：
+\begin{equation*}
+  A^{n} = V \Lambda^{n} V^{-1}
+\end{equation*}
+进而：
 \begin{IEEEeqnarray}{rCl}
-  e^A & = & c_n V \Lambda^n V^{-1}  \nonumber \\
-  & = & V e^{\Lambda} V^{-1} 
+  e^A & = & \sum_{n=0}^{\infty} c_n A^{n}  \nonumber \\
+  & = & \sum_{n=0}^{\infty} c_n V \Lambda^n V^{-1} \nonumber \\
+  & = & V \left( \sum_{n=0}^{\infty} c_n \Lambda^n \right) V^{-1} \nonumber \\
+  & = & V e^{\Lambda} V^{-1}
 \end{IEEEeqnarray}
 而对于对角矩阵$\Lambda$,其指数函数相当于指数单独作用于每个对角元素。所以只要我们将哈密顿矩阵对角化，得到特征向量和特征值，便可以通过矩阵计算得到$e^{(-i/\hbar)\hat{H}dt}$。\par 
-然而对角化方法在处理含时演化算符中并不常用，主要是由于需要求逆矩阵，对于条件数差的情况很容易表现出数值不稳定性，而且大矩阵对角化耗费计算机时间。多项式展开方法在处理含时演化算符时表现出优良的性质，例如切比雪夫展开方法。在章节\ref{sec:analysis}中我们会比较二者的数值表现。
+对角化方法在数学上似乎非常简单有效，然而对角化方法在处理含时演化算符中并不常用。主要原因是该算法需要求逆矩阵，对于矩阵元素条件不理想的情况很容易表现出数值不稳定性，例如数值溢出等；而且大矩阵对角化耗费计算机时间，算法复杂度并不低。多项式展开方法在处理含时演化算符时表现出优良的性质，例如切比雪夫展开方法。在章节\ref{sec:analysis}中我们会比较二者的数值表现。
 
 \subsubsection{切比雪夫多项式展开方法}
 对角化处理方法似乎是一种高效的工具，然而由于涉及逆矩阵的计算，可能会产生数值不稳定性。在使用计算机处理物理问题时，数值方法的实现过程时常并不如理论推导得那样美观，理论上简单优美的结论在用数值方法实现时可能产生很大的偏差。例如当我们的对角化过程中的酉矩阵含有很接近于零的值时，涉及倒数运算时可能会导致数据溢出，产生离奇的结果；如果错误结果并不明显，还可能被忽略，导致后面更严重的误差。\par 
