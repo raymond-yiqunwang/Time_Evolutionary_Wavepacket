@@ -1,9 +1,9 @@
 % !TEX root = Time_Evo.tex
 
-\subsubsection{含时演化结果演示}
+\subsection{含时演化结果演示}
 在量子力学中，量子系统的状态用波函数(wave function)来描述，在这里我们使用$\Psi(r,t)$表示被研究体系的总波函数，$r$是体系的位置，$t$为时间。求解含时薛定谔方程可以得到波函数随时间演化的所有信息，波函数是波动方程的解，具有类波的性质。需要注意，波函数$\Psi(r,t)$本身是复值函数，其值表示粒子在某一确定的时间空间点处的概率幅度；而波函数表达式的模平方${|\Psi(r,t)|}^2$表示在该时空点上粒子出现的概率，因此量子体系并不像经典力学体系那样具有确定性，它是建立在统计力学之上的。
 
-为了将波函数概率分布变得可视化，我们将${\Psi(r,t)}^2$对空间坐标量对应作图。由于哈密顿量选取的是一维简谐振子模型，我们将初始的波函数设为一系列分立的振动能级本征波函数，求解薛定谔方程:
+为了将波函数概率分布变得可视化，我们将${|\Psi(r,t)|}^2$对空间坐标量对应作图。由于哈密顿量选取的是一维简谐振子模型，我们将初始的波函数设为一系列分立的振动能级本征波函数，求解薛定谔方程:
 \begin{equation}
   -\frac{\hbar^2}{2\mu}\frac{d^2\Psi}{dx^2} + \frac{1}{2}kx^2\Psi = E \Psi
 \end{equation}
@@ -23,32 +23,36 @@
 \begin{figure}[h]
   \center
   \vspace{-1mm}
-  \includegraphics[width=0.9\linewidth]{Psi_Fig.png}
+  \includegraphics[width=0.95\linewidth]{Psi_Fig.png}
   \caption{线性谐振子能级、波函数和概率分布图}
   \label{fig:Psi_Fig}
 \end{figure}
-
 正如\ref{sec:basis}所述，我们使用一系列$sinc$函数拟合谐振子的波函数。首先声明程序中使用的默认参数：全部使用原子单位(a.u.)；采样点数为100并等距采样，采样空间为[-2,2]；简谐振子的力常数$k=4{\pi}^2{\nu_e}^2\mu$中，令$\nu_e$和$\mu$均为1；含时演化的单位时间间隔$dt$定为0.01。
 
 将$\Psi$用$sinc$函数展开后得到一个系数向量，在接下来的处理中这个向量将代替波函数的具体形式出现，即所有算符操作都是作用在系数向量上的。在构造含时演化算符$U(t) = e^{(-i/\hbar)\hat{H}t}$在希尔伯特空间中的表示矩阵后，每一步含时演化即将演化算符作用在系数矩阵上。将作用后的新系数向量归一化并做逆变换，就得到了单步演化后的波函数。由于我们采用间断演化，时间尺度上是不连续的，因此$dt$的取值越小则越接近真实的情况；由于原子单位中单位时间约为2.4$\times$10$^{-17}$s，可以认为我们的时间间隔足够小，能够大约模拟出含时演化的过程。
 
 按照理论预测，我们构造的是一维简谐振子的哈密顿矩阵，当相应的含时演化算符作用在一维谐振子本征态的时候，应该预期得到不随时间变化的波函数；而当演化算符作用在非本征态时，波函数的空间概率分布将会发生变化。我们的计算机程序给出了这些过程的演化情况：
 \begin{figure}[hbt]
-  \center
+  \centering
+  \captionsetup{justification=centering}
   \vspace{1mm}
   \includegraphics[width=0.75\linewidth]{v=0}
   \includegraphics[width=0.75\linewidth]{v=1}
-  \caption{简谐振子本征态含时演化示意图\\
-            （波函数表达式） \label{fig:prop1}}
+  \caption{简谐振子本征态含时演化 \\
+            $\Psi = N_{\nu}e^{-q^2/2}H_{\nu}(q)$ \label{fig:prop1}}
 \end{figure}
 
-\begin{figure}[hbt]
-  \center
+\begin{figure}[h]
+  \centering
+  \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.75\linewidth]{v=0}
-  \includegraphics[width=0.75\linewidth]{v=1}
-  \caption{非本征态含时演化示意图 \label{fig:prop2}}
+  \includegraphics[width=0.85\linewidth]{rand1}
+  \includegraphics[width=0.85\linewidth]{rand2}
+  \caption{非本征态含时演化  \label{fig:prop2}}
 \end{figure}
 
-\subsection{切比雪夫展开与对角化方法比较}
-\subsection{调整参数对演化的影响} 
+上图是使用切比雪夫展开进行的演化演示图，使用对角化方法可以得到类似的结果。然而我们发现，两种展开方法作用在本征态时表现良好，波函数概率分布不发生变化；但是作用在非本征态时波函数的变化似乎不可预测，两者差生一定的差异，我们在后面会讨论非本征态的演化。接下来的结果与分析都是以表现良好的本征态为对象的。
+
+\subsection{取样格点数的影响}
+
+\subsection{非本征态的演化} 
