@@ -23,7 +23,7 @@
 \begin{figure}[h]
   \center
   \vspace{-1mm}
-  \includegraphics[width=0.95\linewidth]{Psi_Fig.png}
+  \includegraphics[width=0.95\linewidth]{3.1/Psi_Fig.png}
   \caption{线性谐振子能级、波函数和概率分布图}
   \label{fig:Psi_Fig}
 \end{figure}
@@ -31,28 +31,76 @@
 
 将$\Psi$用$sinc$函数展开后得到一个系数向量，在接下来的处理中这个向量将代替波函数的具体形式出现，即所有算符操作都是作用在系数向量上的。在构造含时演化算符$U(t) = e^{(-i/\hbar)\hat{H}t}$在希尔伯特空间中的表示矩阵后，每一步含时演化即将演化算符作用在系数矩阵上。将作用后的新系数向量归一化并做逆变换，就得到了单步演化后的波函数。由于我们采用间断演化，时间尺度上是不连续的，因此$dt$的取值越小则越接近真实的情况；由于原子单位中单位时间约为2.4$\times$10$^{-17}$s，可以认为我们的时间间隔足够小，能够大约模拟出含时演化的过程。
 
-按照理论预测，我们构造的是一维简谐振子的哈密顿矩阵，当相应的含时演化算符作用在一维谐振子本征态的时候，应该预期得到不随时间变化的波函数；而当演化算符作用在非本征态时，波函数的空间概率分布将会发生变化。我们的计算机程序给出了这些过程的演化情况：
+按照理论预测，我们构造的是一维简谐振子的哈密顿矩阵，当相应的含时演化算符作用在一维谐振子本征态的时候，应该预期得到不随时间变化的波函数；而当演化算符作用在非本征态时，波函数的空间概率分布将会发生变化。我们的计算机程序给出了这些过程的演化情况。
 \begin{figure}[hbt]
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.75\linewidth]{v=0}
-  \includegraphics[width=0.75\linewidth]{v=1}
+  \includegraphics[width=0.75\linewidth]{3.1/v=0}
+  \includegraphics[width=0.75\linewidth]{3.1/v=1}
   \caption{简谐振子本征态含时演化 \\
             $\Psi = N_{\nu}e^{-q^2/2}H_{\nu}(q)$ \label{fig:prop1}}
 \end{figure}
+
+\begin{figure}[hbt]
+  \centering
+  \captionsetup{justification=centering}
+  \vspace{1mm}
+  \includegraphics[width=0.75\linewidth]{3.1/rand1}
+  %\includegraphics[width=0.75\linewidth]{3.1/rand2}
+  \caption{非本征态含时演化  \label{fig:prop2}}
+\end{figure}
+
+图\ref{fig:prop1}和图\ref{fig:prop2} 是使用切比雪夫展开进行的演化演示图，使用对角化方法可以得到类似的结果。我们发现，演化算符作用在本征态上时确实不会改变波函数的空间概率分布，而作用在非本征态上的结果有些难以预测。目前观察的结论是非本征态在短时间内会发生类周期性变化，波形不断改变。
+
+\subsection{切比雪夫展开}
+首先我们考察最感兴趣的切比雪夫展开的变现。如图\ref{fig:prop1}所示，在本征态时切比雪夫展开的含时演化算符并不改变本征态的概率分布，符合预期。影响切比雪夫展开的参数因子有：格点数$N$，时间步长$dt$和切比雪夫展开项的数量$M$。接下来我们逐一讨论它们的影响。
+
+\subsubsection{展开项数的影响}
+正如之前所推导的，切比雪夫多项式展开是一个递归算法，$\Phi_{n+1}(\hat{X}) = 2\hat{X}\Phi_{n}(\hat{X}) + \Phi_{n-1}(\hat{X})$，显然展开项的数量对展开的精度有影响。可以预测，随着展开项数的增加，含时演化算符的表示矩阵中的元素会收敛于一定值，因此精度越来越高；然而也要注意每增加一项，计算机就要多进行一次递归循环，会增加占用的计算资源。因此我们希望找到合适的展开项数量。
+
+由于切比雪夫展开本质上可以看做哈密顿算符线性变化得到的多项式，因此其作用在本征函数上，经归一化后理论上是不会发生变化的，也就是说改变展开项数量不会影响本征态。事实上我们的程序测试也证明了这一点。所以我们选用非本征态$\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}$作为研究对象，选择$dt=0.01$，格点数$N=100$为参数。将不同的展开项得到的结果与对角化我结果相比较(同时也和自身的变化趋势比较，观察其变化情况是否收敛)，结果发现最佳的展开项数为40。
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{P{2.2cm}|P{2.2cm}|P{2.2cm}}
+    \hline
+    \multicolumn{3}{c}{$\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}$}\\ \hline
+     展开项数 & 波形 & 能量/a.u.  \\ \hline
+     20 & 非正常 & 3.157                    \\ \hline
+     25 & 非正常 & 19.666 \\ \hline
+     30 & 非正常 & 8.376                    \\ \hline
+     35 & 正常 & 15.082 \\ \hline
+     40 & 正常  & 14.810                    \\ \hline
+     45 & 正常 & 14.810 \\ \hline
+     50 & 正常 & 14.810                  \\ \hline
+     55 & 正常 & 14.810 \\ \hline
+     60 & 正常 & 14.810                  \\ \hline
+  \end{tabular}
+\captionof{table}{\textbf{不同展开项数结果比较}}
+\label{tab:num_expansion}
+\end{table} \par 
 
 \begin{figure}[h]
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.85\linewidth]{rand1}
-  \includegraphics[width=0.85\linewidth]{rand2}
-  \caption{非本征态含时演化  \label{fig:prop2}}
+  \includegraphics[width=0.75\linewidth]{3.2.1/M_num}
+  \caption{不同展开项演化图示\\
+            $\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}$  \label{fig:M_num}}
 \end{figure}
+上述的波形正常与否的判断主要依据两个判据：首先是和对角化方法给出的演化波函数的波形和能量对比，结果发现波形与对角化结果几乎一样，能量相近，约为14.810(a.u.)；其次是和这一系列波函数自身的变化趋势比较，发现当$n \geq 40$时波函数的波形和能量都基本收敛。图\ref{fig:M_num}给出了6个时刻的演化波形。因此接下来程序中使用的切比雪夫展开项数默认情况下设置为40。
 
-上图是使用切比雪夫展开进行的演化演示图，使用对角化方法可以得到类似的结果。然而我们发现，两种展开方法作用在本征态时表现良好，波函数概率分布不发生变化；但是作用在非本征态时波函数的变化似乎不可预测，两者差生一定的差异，我们在后面会讨论非本征态的演化。接下来的结果与分析都是以表现良好的本征态为对象的。
+\subsubsection{格点数$N$的影响}
+格点数$N$是我们在波函数采样区间$\left[-2,2\right]$内的采样点数，我们采用的是等距节点法。按照常识来说采样点越多那么计算的精度越高，不过更多的采样点也意味着需要更多计算资源。由于哈密顿量的表达式含有动量项，而动量算符涉及波函数的二阶求导，在我们使用的二阶差分方法中(公式\ref{eq:three-point} )两个相邻$x$的取值越接近则所做差分越准确。
 
-\subsection{取样格点数的影响}
+由于切比雪夫展开和对角化方法都使用了$N$阶矩阵，我们可以将二者作相应的对比参照。如图和图分别是切比雪夫展开和对角化方法以$dt=0.01$为步长演化100步得到的波函数。从波形和能量不难发现$N=50$的采样数过少，哈密顿量不够精确，演化得到的波函数和其他结果差别较大。有意思的是，当采样点数大于300时，切比雪夫方法出现了问题，波形与能量有很大偏差。猜想可能是数值不稳定造成的，以后的工作可以尝试分析其中的原因。为了用合适的计算机资源得到足够准确的结果，我们将最优采样点数$N$选取为200。
 
-\subsection{非本征态的演化} 
+
+
+\subsubsection{时间步长$dt$的影响}
+
+
+\subsection{切比雪夫展开与对角化的比较}
+
+
+\subsection{精确求解波函数的含时演化} 

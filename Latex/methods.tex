@@ -133,9 +133,10 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
   & = & -\frac{1}{2\mu}\int_{-\infty}^{\infty} {\phi_i}^{*}\frac{\partial^2 \phi_j}{\partial x^2} dx \nonumber
 \end{IEEEeqnarray}
 动能项含有二阶导数计算，对此我们采用三点近似法(three-point-approximation)处理：
-\begin{equation*}
+\begin{equation}
   \frac{\partial^2 \phi_j}{\partial x^2} = \frac{\phi_j(x+\Delta x) + \phi_j(x-\Delta x) - 2\phi_j(x)}{{\Delta x}^2}
-\end{equation*}
+  \label{eq:three-point}
+\end{equation}
 根据$sinc$函数的正交性质易知：
 \begin{align}
   T_{ij} & = 
