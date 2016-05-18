@@ -37,8 +37,7 @@
   \captionsetup{justification=centering}
   \vspace{1mm}
   \includegraphics[width=0.85\linewidth]{3.1/v=0}
-  \includegraphics[width=0.85\linewidth]{3.1/v=1}
-  \caption{简谐振子本征态含时演化 \\
+  \caption{简谐振子定态本征态含时演化 \\
             $\Psi = N_{\nu}e^{-q^2/2}H_{\nu}(q)$ \label{fig:prop1}}
 \end{figure}
 
@@ -46,12 +45,11 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.95\linewidth]{3.1/rand1}
-  %\includegraphics[width=0.75\linewidth]{3.1/rand2}
-  \caption{非本征态含时演化  \label{fig:prop2}}
+  \includegraphics[width=0.85\linewidth]{3.1/v=1} 
+  \caption{本征态含时演化  \label{fig:prop2}}
 \end{figure}
 
-图\ref{fig:prop1}和图\ref{fig:prop2} 是使用切比雪夫展开进行的演化演示图，使用对角化方法可以得到类似的结果。我们发现，演化算符作用在本征态上时确实不会改变波函数的空间概率分布，而作用在非本征态上的结果有些难以预测。目前观察的结论是非本征态在短时间内会发生类周期性变化，波形不断改变。
+图\ref{fig:prop1}和图\ref{fig:prop2} 是使用切比雪夫展开进行的演化演示图，使用对角化方法可以得到几乎相同的结果。我们发现，演化算符作用在定态本征态上时确实不会改变波函数的空间概率分布，符合我们的理论预测。
 
 
 \subsection{切比雪夫展开项数的影响}
@@ -158,7 +156,7 @@
 \begin{equation*}
   \Psi(t) \approx e^{\beta} \sum_{n=0}^{N} a_n \phi_n[-i H_{\text{norm}}] \Psi(0)
 \end{equation*}
-在确认贝塞尔函数和递归函数的程序编写无误后，问题的矛头指向了切比雪夫展开项数。通过增加展开项数量，单步演化的结果成功收敛于期望值。在尝试增加展开项数的过程中，我们还发现$dt$的正加似乎会剧烈影响达到收敛的展开项数，为此我们制作了$dt$-收敛展开项数关系表，见表\ref{tab:dt-M}和图\ref{fig:dt-M}，其中收敛的标准定位能量值精确到6位有效数字。
+在确认贝塞尔函数和递归函数的程序编写无误后，问题的矛头指向了切比雪夫展开项数。通过增加展开项数量，单步演化的结果成功收敛于期望值。在尝试增加展开项数的过程中，我们还发现$dt$的正加似乎会剧烈影响达到收敛的展开项数，为此我们制作了$dt$-收敛展开项数关系表，见表\ref{tab:dt-M}和图\ref{fig:dt-M}，其中收敛的标准定位能量值精确到6位有效数字。由于不是精确的定量计算，我们只给出线性相关的结论而不给出具体的数值关系。
 \begin{table}[hbt]
   \centering
   \begin{tabular}{|P{3.5cm}|P{3.5cm}|}
@@ -187,6 +185,50 @@
 
 可见随着时间步长的增长，所需要的切比雪夫多项式数量线性增长。我们手写的矩阵乘法的算法复杂度为$O(N^3)$，如果使用k步短步长演化，只需要将$\hat{U}$矩阵作用在波函数矢量上k次，即进行k次矩阵乘法；如果使用单步长步长演化，由于dt和展开项数的线性关系，相当于需要k倍的展开项系数才能构建$\hat{U}$，而每次递归循环中进行的复杂度最高的运算也是一次矩阵乘法，因此两种演化方法在复杂度上是相等的。
 
-可以看出，在本课题所用模型中切比雪夫展开和对角化方法的表现较为一致。Blablabla...
+可以看出，在本课题所用模型中切比雪夫展开和对角化方法的表现较为一致。然而实际体系中切比雪夫展开的使用率要更高，最重要的原因在于其计算的误差被均匀分布于所有本征值中，并且计算的数值稳定性高。
 
-\subsection{非本征态的含时演化} 
+\subsection{态叠加本征态的含时演化}
+前面我们已经看到，当含时演化算符作用在波函数本征态上，其概率分布不发生变化，这项结果是显然的：
+\begin{equation}
+  \Psi(t) = e^{(-i/\hbar)\hat{H}t}\Psi(0)
+\end{equation} 
+是含时薛定谔方程的解，从形式上看相当于在初始波函数前面加了一项复数系数，那么经过波函数归一化处理，其空间概率分布将不变。
+
+如果初始状态为定态波函数的线性组合，例如：
+\begin{equation}
+  \left| \Psi(0) \right> = \alpha \left| \phi_1 \right> + \beta \left| \phi_2 \right>
+\end{equation}
+由于
+\begin{IEEEeqnarray}{rCl}
+  \left| \Psi(t)\right> & = & \alpha \left| \phi_1 \right> e^{-i\epsilon_1 t/\hbar} + \beta \left| \phi_2 \right> e^{-i\epsilon_2 t/\hbar} \nonumber \\
+  i\hbar \frac{\partial}{\partial t} \left| \Psi(t)\right> & = & \alpha \epsilon_1 \left| \phi_1 \right> e^{-i\epsilon_1 t/\hbar} + \beta \epsilon_2 \left| \phi_2 \right> e^{-i\epsilon_2 t/\hbar} \nonumber \\
+  & = & \hat{H} \left| \Psi(t) \right> \nonumber
+\end{IEEEeqnarray}
+所以
+\begin{IEEEeqnarray}{rCl}
+  \left| \Psi(t) \right> & = & \alpha \left| \phi_1 \right> e^{-i\epsilon_1 t/\hbar} + \beta \left| \phi_2 \right> e^{-i\epsilon_2 t/\hbar} \nonumber \\
+  & = & e^{(-i/\hbar)\hat{H}t} \left| \Psi(0) \right> \nonumber \\
+  & = & \hat{U} \left| \Psi(0) \right> \nonumber
+\end{IEEEeqnarray}
+含时演化算符作用在态叠加本征函数上可以得到演化后的波函数，这是我们构造含时演化算符的主要目的。如此一来给定体系的初始波函数后(显然是体系一种可能的状态)，通过作用含时演化算符得到以后任意时刻的波函数，那么就可以获得所有需要的信息。我们令
+
+\begin{align*}
+  \phi_1  &=  \sqrt[4]{2} e^{-\pi x^2} \\
+  \phi_2  &=  2\sqrt[4]{2\pi^2} x e^{-\pi x^2}  \\
+  \Psi(0)  &=  \frac{\sqrt{2}}{2}\phi_1 + \frac{\sqrt{2}}{2}\phi_2
+\end{align*}
+图(???)给出了其含时演化的结果。发现这个体系将做周期性的变化，用切比雪夫展开和对角化方法可以得到很接近的结果，不过我们还在试图找寻其他途径来证明我们的演化结果是正确的。
+\begin{figure}[hbt]
+  \centering
+  \captionsetup{justification=centering}
+  \vspace{-1mm}
+  \includegraphics[width=0.99\linewidth]{TBA}
+  \caption{$\Psi$随时间的演化情况}
+  \label{fig:LC_Psi}
+\end{figure}
+
+
+
+
+
+
