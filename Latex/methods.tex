@@ -184,7 +184,7 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
   \item 体系完全丧失初始特征并融入环境,在这种情况下$\sum_i \left| i \right> \otimes \left| \epsilon \right>$演化为$\left| \epsilon_i \right>$;
   \item 体系持续影响着环境，其本身却不受扰动，即$\sum_i \left| i \right> \otimes \left| \epsilon \right>$演化为$\left| i,\epsilon_i \right>$。
 \end{itemize}\par 
-在这里我们仅仅简单介绍波函数坍缩的现象，便于引出下一节对含时演化算符的推导。
+在这里我们仅仅简单介绍这些量子力学现象，便于引出下一节对含时演化算符的推导。
 
 \subsubsection{含时演化算符}
 之前我们解决了波函数和哈密顿量在希尔伯特空间中的表示问题后，并介绍了波函数坍缩现象，接下来对波函数进行含时演化。根据含时薛定谔方程(公式\ref{eq:td-Schrodinger})和$\Psi(t) = \hat{U}\Psi(0)$，这个偏微分方程的解满足形式：
@@ -195,7 +195,7 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
 如果哈密顿量与时间相关，那么我们将得到这样的形式：
 \begin{IEEEeqnarray}{rCl}
   \Psi(t) & = & \hat{U}(t)\Psi(0) \nonumber \\
-  & = & \hat{T} \  exp\left[ -\frac{i}{\hbar}\int_0^t \hat{H}dt' \right] \Psi(0)
+  & = & \hat{T} \  exp\left[ -\frac{i}{\hbar}\int_0^t \hat{H}dt' \right] \Psi(0)\label{eq:td-evo}
 \end{IEEEeqnarray}
 其中$\hat{T}$是时间序列算符，它确保演化算符按照时间排序后作用于波函数上。处理这样的演化公式主要有两个难点：
 \begin{itemize}
@@ -215,11 +215,24 @@ $\hat{p}$为动量算符,并且有$\hat{p} = -i\hbar \frac{\partial}{\partial x}
 \end{equation}
 在得到$\Delta E$之后，我们可以估算出可以使用的时间步长$dt$的下限，如果使用步长小于该$dt$阈值，那么该演化将是不准确的。在我们的参数设置条件下，$dt$取值的下限为$3.86 \times 10^{-4}$，而我们默认参数$dt$为0.01，理论上是可行的。
 
+含时演化算符$\hat{U}$的处理主要可以分为全局演化方法和小步长演化方法。全局演化方法将演化时间$t$视为常数因子，直接用数学方法将演化算符的矩阵表达式计算出来。也就是说，单步演化10单位时间的结果和重复操作10次，每次演化1单位时间是完全等价的。而小步长演化方法将时间项$dt$视为重要参数因子，例如二阶微分法中将含时演化算符做泰勒展开：
+\begin{equation*}
+  e^{-i\hat{H}dt/\hbar} = 1 - i\hat{H}dt/\hbar + \cdots
+\end{equation*}
+或者如分时演化方法中分别处理动能算符和势能算符的演化：
+\begin{IEEEeqnarray*}{rCl}
+  e^{\frac{-i\hat{H}\Delta t}{\hbar}} &\approx & exp{\left( -i \frac{\hat{P}^2}{2m}\frac{\Delta t}{2\hbar}\right)} exp{\left( -i \hat{V} \frac{\Delta t}{2\hbar}\right)} \times \\
+  &&exp\left( -i\hat{V}\frac{\Delta t}{2\hbar}\right) exp \left( -i\frac{\hat{P}^2}{2m} \frac{\Delta t}{2\hbar}\right)
+\end{IEEEeqnarray*}
+显然，如果我们处理的是含时哈密顿量，如公式\ref{eq:td-evo}，由于时间不再能视为常数参数项，我们必须使用小步长时间进行单步演化。在本课题的研究范围内部考虑含时哈密顿量的处理，因此我们使用全局演化方法处理含时演化算符。
+
 如果哈密顿量不显含时间，那么时间序列算符$\hat{T}$将可以略去，然后将含时演化的过程分割成很多小步骤，每次进行单步演化，以确保该演化步骤内哈密顿量改变不要太大：
 \begin{equation}
   \hat{U} = \prod_{n=0}^{N-1}\hat{U}((n+1)\Delta t,n\Delta t)
 \end{equation}
-于是我们每次将一个$\hat{U}$作用在波函数上，如果要得到10$dt$时刻的波函数情况，应当演化10次，而不是将$dt$简单地乘10。接下来介绍两种展开含时演化算符的数值方法。
+于是我们每次将一个$\hat{U}$作用在波函数上，如果要得到10$dt$时刻的波函数情况，应当演化10次，而不是将$dt$简单地乘10。
+
+接下来介绍两种含时演化算符全局展开的数值方法，分别是切比雪夫展开和对角化方法。
 
 \subsubsection{对角化方法}
 矩阵指数函数的泰勒展开表达式为:
@@ -310,7 +323,7 @@ Tal-Ezer和Kosloff等人提出了用切比雪夫多项式展开含时演化算�
 \begin{split}
   &H_{\text{half}}  =  \frac{1}{2}(H_{\text{max}} + H_{\text{min}}) \nonumber \\ 
   &\Delta H  =  \frac{1}{2} (H_{\text{max}} - H_{\text{min}}) \nonumber \\
-  &H_{\text{norm}}  =  \frac{(H - H_{\text{half}})} {\Delta H}
+  &\hat{H}_{\text{norm}}  =  \frac{(\hat{H} - \hat{I}*H_{\text{half}})} {\Delta H}
 \end{split}
 \end{equation}
 $H_{\text{max}}$和$H_{\text{min}}$分别为$H$的最大和最小本征值。这样$H_{norm}$中的每个元素都在实切比雪夫展开的定义域内。为了方便表示，我们定义$y = -i H_{norm}$，$z = -i H \Delta t /\hbar$，于是有：
@@ -328,11 +341,12 @@ $H_{\text{max}}$和$H_{\text{min}}$分别为$H$的最大和最小本征值。这
 \begin{equation}
   a_n = e^{\beta} D_n J_n(\Delta E \Delta t /\hbar )
 \end{equation}
-其中$\beta = -iH_{half}\Delta E \Delta t /\hbar$；$D_0 = 1$，对$n \geq 1$有$D_n = 2$；$J_n$是第一类贝塞尔函数。
+其中$\beta = -iH_{half} \Delta t /\hbar$；$D_0 = 1$，对$n \geq 1$有$D_n = 2$；$J_n$是第一类贝塞尔函数。
 
 于是将上式带入波函数展开式可以得到：
 \begin{equation}
   \Psi(t) \approx e^{\beta} \sum_{n=0}^{N} a_n \phi_n[-i H_{\text{norm}}] \Psi(0)
+  \label{eq:cheby_equation}
 \end{equation}
 不过在实际程序编写中，我们还是将复切比雪夫函数变换为实切比雪夫多项式进行递归运算，$\phi_n(-iH_{norm}) = {(-i)}^{n}T_n(H_{norm})$，这与之前的$\phi_n(y) = i^n T_n(-iy)$是等价的。这样一来提升了算法的效率，因为在递归运算中引入复数，原本8位的变量都要变成16位的。在接下来的结果与讨论部分我们将分析切比雪夫展开含时演化算符的性质。
 
