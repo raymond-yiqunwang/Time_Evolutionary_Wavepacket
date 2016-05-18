@@ -1,9 +1,38 @@
 % !TEX root = Time_Evo.tex
 
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{\hfil \bfseries \sihao}
+\renewcommand{\cftsecfont}{\bfseries \sihao}
+\renewcommand{\cftsecpagefont}{\bfseries \sihao}
+\renewcommand{\cftsubsecfont}{\bfseries \sihao}
+\renewcommand{\cftsubsecpagefont}{\bfseries \sihao}
+\renewcommand{\cftsubsubsecfont}{\bfseries \sihao}
+\renewcommand{\cftsubsubsecpagefont}{\bfseries \sihao}
+
+\usepackage{abstract}
+\renewcommand{\abstractnamefont}{\sihao \bfseries}
+
+\setlength{\cftbeforesecskip}{10pt}
+\setlength{\cftbeforesubsecskip}{8pt}
+\setlength{\cftbeforesubsubsecskip}{6pt}
+
+\usepackage{titlesec}
+\titleformat{\section}
+  { \sihao \bfseries}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  { \sihao \bfseries}
+  {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  { \sihao \bfseries}
+  {\thesubsubsection}{1em}{}  
+
+
 
 \usepackage[retainorgcmds]{IEEEtrantools}
 \usepackage{caption}
 \usepackage{array}
+\usepackage{setspace}
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{indentfirst}
@@ -21,6 +50,8 @@
 \renewcommand\abstractname{摘要}
 \renewcommand\tablename{表}
 \renewcommand\figurename{图}
+\renewcommand\contentsname{目录}
+\renewcommand{\baselinestretch}{1.2}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 \makeindex
 

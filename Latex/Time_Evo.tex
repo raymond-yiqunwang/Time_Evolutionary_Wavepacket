@@ -16,18 +16,38 @@
   \includepdf{Book-Cover.pdf}
 \end{titlepage}
 
-\title{\textbf{\heiti{波函数含时演化方法与性质研究}}}
+\twocolumn[
+\begin{@twocolumnfalse}
+
+  \tableofcontents
+  
+\end{@twocolumnfalse}]
+
+\title{\sanhao \textbf{\heiti{波函数含时演化方法与性质研究\\
+                       Time Propagation of Wave Functions }}}
 \author{\xiaosi{王逸群，李晔飞$^{\dagger}$}}
 \date{}
 
 \twocolumn[
 \begin{@twocolumnfalse}
+  
   \maketitle
 
   \begin{abstract}
-    \input{abstract}\\
+    \xiaosi
+    \input{abstract_zh}
   \end{abstract}
+  
+\renewcommand\abstractname{Abstract}
+  \begin{abstract}
+    \xiaosi
+    \input{abstract_en}
+  \end{abstract}
+
 \end{@twocolumnfalse}]
+
+\clearpage
+\xiaosi
 
 \section{引言}
 \label{sec:intro}
@@ -46,5 +66,7 @@
 \label{conclusion}
 \input{conclusion}
 %\end{CJK}
-
+{
+\bibliographystyle{jcc}
+}
 \end{document}
