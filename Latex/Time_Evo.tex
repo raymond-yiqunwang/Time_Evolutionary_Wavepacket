@@ -13,15 +13,17 @@
 \begin{document}
 
 \begin{titlepage}
+
   \includepdf{Book-Cover.pdf}
-\end{titlepage}
 
-\twocolumn[
-\begin{@twocolumnfalse}
-
-  \tableofcontents
+  \twocolumn[
+  \begin{@twocolumnfalse}  
+    \tableofcontents  
+  \end{@twocolumnfalse}]
   
-\end{@twocolumnfalse}]
+  \thispagestyle{empty}
+  
+\end{titlepage}
 
 \title{\sanhao \textbf{\heiti{波函数含时演化方法与性质研究\\
                        Time Propagation of Wave Functions }}}
@@ -65,8 +67,13 @@
 \section{结论与展望}
 \label{conclusion}
 \input{conclusion}
-%\end{CJK}
+
 {
-\bibliographystyle{jcc}
+\begin{spacing}{1}
+  \wuhao
+  \bibliographystyle{IEEEtranN}
+  \bibliography{refsc}
+\end{spacing}
+
 }
 \end{document}

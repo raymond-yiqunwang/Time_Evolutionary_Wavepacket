@@ -36,17 +36,18 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.85\linewidth]{3.1/v=0}
-  \caption{简谐振子定态本征态含时演化 \\
-            $\Psi = N_{\nu}e^{-q^2/2}H_{\nu}(q)$ \label{fig:prop1}}
+  \includegraphics[width=0.99\linewidth]{3.1/v=0}
+  \caption{\textbf{简谐振子基态波函数含时演化} \\
+            $\boldsymbol{\Psi = \sqrt[4]{2}e^{-\pi x^2}}$ \label{fig:prop1}}
 \end{figure}
 
 \begin{figure}[hbt]
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.85\linewidth]{3.1/v=1} 
-  \caption{本征态含时演化  \label{fig:prop2}}
+  \includegraphics[width=0.99\linewidth]{3.1/v=1} 
+  \caption{\textbf{简谐振子第一激发态含时演化}\\
+            $\boldsymbol{\Psi = 2\sqrt[4]{2\pi^2}x e^{-\pi x^2}}$  \label{fig:prop2}}
 \end{figure}
 
 图\ref{fig:prop1}和图\ref{fig:prop2} 是使用切比雪夫展开进行的演化演示图，使用对角化方法可以得到几乎相同的结果。我们发现，演化算符作用在定态本征态上时确实不会改变波函数的空间概率分布，符合我们的理论预测。
@@ -82,9 +83,9 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.95\linewidth]{3.2.1/M_num}
-  \caption{不同展开项演化图示\\
-            $\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}$  \label{fig:M_num}}
+  \includegraphics[width=0.95\linewidth]{3.2/M_Cheby}
+  \caption{\textbf{不同展开项演化情况}\\
+            $\boldsymbol{\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}}$  \label{fig:M_num}}
 \end{figure}
 上述的波形正常与否的判断主要依据两个判据：首先是和对角化方法给出的演化波函数的波形和能量对比，结果发现波形与对角化结果几乎一样，能量相近，约为14.810(a.u.)；其次是和这一系列波函数自身的变化趋势比较，发现当$n \geq 40$时波函数的波形和能量都基本收敛。图\ref{fig:M_num}给出了6个时刻的演化波形。因此接下来程序中使用的切比雪夫展开项数默认情况下设置为40。有意思的是，当我们改变了其他默认参数(例如$dt$)时，40项切比雪夫展开可能就不足以准确近似含时演化算符，所以我们现在讨论的是上述默认参数情况下选用的最优展开项。改变时间步长对所需展开项数的影响将在后面分析。
 
@@ -97,15 +98,15 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.95\linewidth]{3.2.2/N_Cheby}
-  \caption{格点数对切比雪夫展开的影响 \label{fig:N_Cheby}}
+  \includegraphics[width=0.95\linewidth]{3.3/N_Cheby}
+  \caption{\textbf{格点数对切比雪夫展开的影响} \label{fig:N_Cheby}}
 \end{figure}
 \begin{figure}[h]
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.95\linewidth]{3.2.2/N_Diag}
-  \caption{格点数对对角化方法的影响 \label{fig:N_Diag}}
+  \includegraphics[width=0.95\linewidth]{3.3/N_Diag}
+  \caption{\textbf{格点数对对角化方法的影响} \label{fig:N_Diag}}
 \end{figure}
 
 接下来讨论切比雪夫在$N$值过大时算法崩溃的可能原因。注意$\hat{H}_{norm}$的表达式$\hat{H}_{\text{norm}}  =  (\hat{H} - \hat{I}*H_{\text{half}}) / \Delta H$，只有$\hat{H}$的对角元素被减去$H_{half}$，非对角元素并没有被投影到[-1,1]区间上。在递归算法中每一步都要进行矩阵乘法运算，如果在$H$中含有较大的元素且在矩阵乘法中累积增大，那么最终有可能导致数据溢出。之前我们讨论过，利用三点近似法和局域近似法得到的哈密顿矩阵的本征值随着简谐振子能级的增长将加剧偏离理论值。也就是说，采样点数$N$值越大，哈密顿矩阵中最大的本征值对理论值得偏离越大。因此很可能在$N>300$后发生了数据溢出，经过归一化的错误演化波函数自然不符合预期。这里仅仅提出假设，今后的工作会进一步研究程序运行错误的原因。
@@ -113,8 +114,8 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
-  \includegraphics[width=0.9\linewidth]{H_err/H_err.jpg}
-  \caption{哈密顿量本征值计算结果的偏差 \label{fig:N_Hamiltonian}}
+  \includegraphics[width=0.99\linewidth]{H_err/H_err.pdf}
+  \caption{\textbf{哈密顿量本征值计算结果的偏差} \label{fig:N_Hamiltonian}}
 \end{figure}
 
 
@@ -136,9 +137,9 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{-1mm}
-  \includegraphics[width=0.99\linewidth]{3.3/Diag.pdf}
-  \caption{对角化方法单步与多步演化结果 \\
-            $\Psi(x) = 2 \sqrt[4]{2\pi^2}x e^{-\pi x^2 /10}$}
+  \includegraphics[width=0.99\linewidth]{3.4/Diag.pdf}
+  \caption{\textbf{对角化方法单步与多步演化结果} \\
+            $\boldsymbol{\Psi(x) = 2 \sqrt[4]{2\pi^2}x e^{-\pi x^2 /10}}$}
   \label{fig:Diag_evo}
 \end{figure}
 
@@ -147,9 +148,9 @@
   \centering
   \captionsetup{justification=centering}
   \vspace{-1mm}
-  \includegraphics[width=0.99\linewidth]{3.3/Cheby.pdf}
-  \caption{切比雪夫展开法单步与多步演化结果 \\
-            $\Psi(x) = 2 \sqrt[4]{2\pi^2}x e^{-\pi x^2 /10}$}
+  \includegraphics[width=0.99\linewidth]{3.4/Cheby.pdf}
+  \caption{\textbf{切比雪夫展开法单步与多步演化结果} \\
+            $\boldsymbol{\Psi(x) = 2 \sqrt[4]{2\pi^2}x e^{-\pi x^2 /10}}$}
   \label{fig:Cheby_evo}
 \end{figure}
 既然多步演化给出的计算结果与对角化方法结果一直，我们姑且认为切比雪夫展开的理论推导与模型建立是正确的，那么问题只能出现在数值计算的过程中了。笔者仔细查看了程序中含时演化算符表达式(公式\ref{eq:cheby_equation} )，其中涉及$dt$项的只有相位调节因子$\beta$和系数$a_n$，其他诸如切比雪夫递归项中不涉及$dt$，因此确定了寻找问题的切入点。
@@ -179,7 +180,7 @@
   \captionsetup{justification=centering}
   \vspace{-1mm}
   \includegraphics[width=0.99\linewidth]{dt-M/dt-M}
-  \caption{$\boldsymbol{dt}$与展开项数关系}
+  \caption{$\boldsymbol{dt}$\textbf{与展开项数关系}}
   \label{fig:dt-M}
 \end{figure}
 
@@ -219,14 +220,14 @@
   \Psi(0)  &=  \frac{\sqrt{2}}{2}\phi_1 + \frac{\sqrt{2}}{2}\phi_2
 \end{align*}
 图\ref{fig:LC_Psi} 给出了其含时演化的结果。发现这个体系将做周期性的变化，用切比雪夫展开和对角化方法可以得到很接近的结果，不过我们还在试图找寻其他途径来证明我们的演化结果是正确的。
-\begin{figure}[hbt]
-  \centering
-  \captionsetup{justification=centering}
-  \vspace{-1mm}
-  \includegraphics[width=0.99\linewidth]{TBA}
-  \caption{$\Psi$随时间的演化情况}
-  \label{fig:LC_Psi}
-\end{figure}
+%\begin{figure}[hbt]
+%  \centering
+%  \captionsetup{justification=centering}
+%  \vspace{-1mm}
+%  \includegraphics[width=0.99\linewidth]{TBA}
+%  \caption{$\Psi$随时间的演化情况}
+%  \label{fig:LC_Psi}
+%\end{figure}
 
 
 
