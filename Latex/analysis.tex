@@ -54,7 +54,7 @@
 
 
 \subsection{切比雪夫展开项数的影响}
-首先我们考察最感兴趣的切比雪夫展开的变现。如图\ref{fig:prop1}所示，在本征态时切比雪夫展开的含时演化算符并不改变本征态的概率分布，符合预期。影响切比雪夫展开的参数因子有：格点数$N$，时间步长$dt$和切比雪夫展开项的数量$M$。接下来我们逐一讨论它们的影响。
+首先我们考察最感兴趣的切比雪夫展开的表现。如图\ref{fig:prop1}所示，在本征态时切比雪夫展开的含时演化算符并不改变本征态的概率分布，符合预期。影响切比雪夫展开的参数因子有：格点数$N$，时间步长$dt$和切比雪夫展开项的数量$M$。接下来我们逐一讨论它们的影响。
 
 正如之前所推导的，切比雪夫多项式展开是一个递归算法，$\Phi_{n+1}(\hat{X}) = 2\hat{X}\Phi_{n}(\hat{X}) + \Phi_{n-1}(\hat{X})$，显然展开项的数量对展开的精度有影响。可以预测，随着展开项数的增加，含时演化算符的表示矩阵中的元素会收敛于一定值，因此精度越来越高；然而也要注意每增加一项，计算机就要多进行一次递归循环，会增加占用的计算资源。因此我们希望找到合适的展开项数量。
 
@@ -99,14 +99,16 @@
   \captionsetup{justification=centering}
   \vspace{1mm}
   \includegraphics[width=0.95\linewidth]{3.3/N_Cheby}
-  \caption{\textbf{格点数对切比雪夫展开的影响} \label{fig:N_Cheby}}
+  \caption{\textbf{格点数对切比雪夫展开的影响}\\
+                    $\boldsymbol{\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}}$ \label{fig:N_Cheby}}
 \end{figure}
 \begin{figure}[h]
   \centering
   \captionsetup{justification=centering}
   \vspace{1mm}
   \includegraphics[width=0.95\linewidth]{3.3/N_Diag}
-  \caption{\textbf{格点数对对角化方法的影响} \label{fig:N_Diag}}
+  \caption{\textbf{格点数对对角化方法的影响}\\
+                      $\boldsymbol{\Psi(x) = \sqrt[4]{2}e^{-\pi x^2 /10}}$ \label{fig:N_Diag}}
 \end{figure}
 
 接下来讨论切比雪夫在$N$值过大时算法崩溃的可能原因。注意$\hat{H}_{norm}$的表达式$\hat{H}_{\text{norm}}  =  (\hat{H} - \hat{I}*H_{\text{half}}) / \Delta H$，只有$\hat{H}$的对角元素被减去$H_{half}$，非对角元素并没有被投影到[-1,1]区间上。在递归算法中每一步都要进行矩阵乘法运算，如果在$H$中含有较大的元素且在矩阵乘法中累积增大，那么最终有可能导致数据溢出。之前我们讨论过，利用三点近似法和局域近似法得到的哈密顿矩阵的本征值随着简谐振子能级的增长将加剧偏离理论值。也就是说，采样点数$N$值越大，哈密顿矩阵中最大的本征值对理论值得偏离越大。因此很可能在$N>300$后发生了数据溢出，经过归一化的错误演化波函数自然不符合预期。这里仅仅提出假设，今后的工作会进一步研究程序运行错误的原因。
@@ -211,23 +213,26 @@
   & = & e^{(-i/\hbar)\hat{H}t} \left| \Psi(0) \right> \nonumber \\
   & = & \hat{U} \left| \Psi(0) \right> \nonumber
 \end{IEEEeqnarray}
-
-当初始波函数不是演化算符中哈密顿量的本征态的时候，也是我们最常遇到的情况，就好像给初始的体系外加了一个势场，作用后可以得到演化后的波函数，这是我们构造含时演化算符的主要目的。如此一来给定体系的初始波函数后，通过作用含时演化算符得到以后任意时刻的波函数，那么就可以获得所有需要的信息。例如通过模拟一束激光作用在感兴趣的系统上，我们可以计算其拉曼光谱等。我们令
-
+我们令
 \begin{align*}
   \phi_1  &=  \sqrt[4]{2} e^{-\pi x^2} \\
   \phi_2  &=  2\sqrt[4]{2\pi^2} x e^{-\pi x^2}  \\
   \Psi(0)  &=  \frac{\sqrt{2}}{2}\phi_1 + \frac{\sqrt{2}}{2}\phi_2
 \end{align*}
+
 图\ref{fig:LC_Psi} 给出了其含时演化的结果。发现这个体系将做周期性的变化，用切比雪夫展开和对角化方法可以得到很接近的结果，不过我们还在试图找寻其他途径来证明我们的演化结果是正确的。
-%\begin{figure}[hbt]
-%  \centering
-%  \captionsetup{justification=centering}
-%  \vspace{-1mm}
-%  \includegraphics[width=0.99\linewidth]{TBA}
-%  \caption{$\Psi$随时间的演化情况}
-%  \label{fig:LC_Psi}
-%\end{figure}
+\begin{figure}[hbt]
+  \centering
+  \captionsetup{justification=centering}
+  \vspace{-1mm}
+  \includegraphics[width=0.99\linewidth]{3.5/Random}
+  \caption{$\boldsymbol{\Psi}$\textbf{随时间的演化情况}}
+  \label{fig:LC_Psi}
+\end{figure}
+
+当初始波函数不是演化算符中哈密顿量的本征态的时候，也是我们最常遇到的情况，就好像给初始的体系外加了一个势场，作用后可以得到演化后的波函数，这是我们构造含时演化算符的主要目的。如此一来给定体系的初始波函数后，通过作用含时演化算符得到以后任意时刻的波函数，那么就可以获得所有需要的信息。例如通过模拟一束激光作用在感兴趣的系统上，我们可以计算其拉曼光谱等。在下一步研究中我们将应用这个含时演化算符处理实际的波函数演化问题。
+
+
 
 
 

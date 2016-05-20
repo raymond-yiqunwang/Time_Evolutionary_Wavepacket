@@ -17,7 +17,16 @@
 \setlength{\cftbeforesubsubsecskip}{6pt}
 
 \usepackage[numbers]{natbib}
-\setlength{\bibsep}{0pt plus 0.5ex}
+\setlength{\bibsep}{2pt}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+}
 
 \usepackage{titlesec}
 \titleformat{\section}
@@ -30,9 +39,7 @@
   { \sihao \bfseries}
   {\thesubsubsection}{1em}{}  
 
-%\usepackage{fancyhdr}
-%\pagestyle{fancy}
-%\chead{复旦大学本科毕业论文}
+\usepackage{fancyhdr}
 
 \usepackage[retainorgcmds]{IEEEtrantools}
 \usepackage{caption}
@@ -47,7 +54,7 @@
 \setlength{\parskip}{5pt}
 \usepackage{pdfpages}
 \usepackage{xcolor,graphicx}
-\usepackage[hmargin=2.2cm,vmargin=2.5cm]{geometry}
+\usepackage[hmargin=2.5cm,vmargin=2.8cm]{geometry}
 \usepackage{makeidx}
 \usepackage{amsmath,amsthm}
 \usepackage[retainorgcmds]{IEEEtrantools}
